@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dolphin Splash | Pressure Washing</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --deep: #0d2240;
+    --ocean: #0e5fa3;
+    --sky: #38b6ff;
+    --foam: #c8f0ff;
+    --white: #f5fbff;
+    --accent: #00d4ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── WATER ANIMATION ── */
+  .wave-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .wave-bg::before, .wave-bg::after {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    border-radius: 40%;
+    opacity: 0.04;
+  }
+  .wave-bg::before {
+    background: var(--sky);
+    top: -50%;
+    left: -50%;
+    animation: spin1 25s linear infinite;
+  }
+  .wave-bg::after {
+    background: var(--accent);
+    top: -40%;
+    left: -30%;
+    animation: spin1 18s linear infinite reverse;
+  }
+  @keyframes spin1 { to { transform: rotate(360deg); } }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 3rem;
+    backdrop-filter: blur(12px);
+    background: rgba(10,22,40,0.75);
+    border-bottom: 1px solid rgba(56,182,255,0.12);
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+  }
+  .logo-icon {
+    font-size: 1.8rem;
+    animation: bob 3s ease-in-out infinite;
+  }
+  @keyframes bob {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  .logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    line-height: 1;
+  }
+  .logo-text span { color: var(--accent); }
+
+  nav ul {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  nav ul a {
+    color: rgba(245,251,255,0.65);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  nav ul a:hover { color: var(--accent); }
+
+  .nav-cta {
+    background: var(--accent);
+    color: var(--navy) !important;
+    padding: 0.55rem 1.4rem;
+    border-radius: 100px;
+    font-weight: 500 !important;
+    transition: background 0.2s, transform 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--sky) !important; transform: scale(1.04); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    overflow: hidden;
+  }
+
+  .hero-spray {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 110%, rgba(14,95,163,0.35) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 30% at 80% 20%, rgba(0,212,255,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Droplet particles */
+  .drops {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .drop {
+    position: absolute;
+    width: 3px;
+    height: 10px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    border-radius: 100px;
+    opacity: 0;
+    animation: fall var(--dur) var(--delay) ease-in infinite;
+  }
+  @keyframes fall {
+    0%   { opacity: 0; transform: translateY(-20px) scaleY(0.5); }
+    10%  { opacity: 0.7; }
+    90%  { opacity: 0.4; }
+    100% { opacity: 0; transform: translateY(120px) scaleY(1.2); }
+  }
+
+  .hero-eyebrow {
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 14vw, 11rem);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+    animation: fadeUp 0.8s 0.15s ease both;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+    display: block;
+  }
+  .hero-sub {
+    margin-top: 1.8rem;
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: rgba(245,251,255,0.65);
+    max-width: 480px;
+    line-height: 1.7;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .hero-buttons {
+    margin-top: 2.8rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeUp 0.8s 0.45s ease both;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--navy);
+    padding: 1rem 2.2rem;
+    border-radius: 100px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 30px rgba(0,212,255,0.35);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 50px rgba(0,212,255,0.55);
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--white);
+    padding: 1rem 2.2rem;
+    border-radius: 100px;
+    font-weight: 400;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: 1px solid rgba(245,251,255,0.2);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-badge {
+    margin-top: 4rem;
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.6s ease both;
+  }
+  .badge-item { text-align: center; }
+  .badge-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.4rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .badge-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(245,251,255,0.45);
+    margin-top: 0.2rem;
+  }
+
+  /* Divider wave */
+  .wave-divider {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    line-height: 0;
+  }
+  .wave-divider svg { display: block; width: 100%; }
+
+  /* ── SERVICES ── */
+  section { position: relative; z-index: 1; }
+
+  .services {
+    background: var(--deep);
+    padding: 6rem 2rem;
+  }
+  .section-label {
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.8rem, 6vw, 4.5rem);
+    text-align: center;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.5rem;
+  }
+  .section-sub {
+    text-align: center;
+    color: rgba(245,251,255,0.5);
+    font-weight: 300;
+    max-width: 500px;
+    margin: 0 auto 3.5rem;
+    line-height: 1.7;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(56,182,255,0.1);
+    border-radius: 20px;
+    padding: 2.2rem;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    cursor: default;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(0,212,255,0.35);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3), 0 0 30px rgba(0,212,255,0.07);
+  }
+  .card-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+  .card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.6rem;
+  }
+  .card p {
+    color: rgba(245,251,255,0.5);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ── WHY US ── */
+  .why {
+    padding: 6rem 2rem;
+    background: var(--navy);
+  }
+  .why-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .why-visual {
+    position: relative;
+  }
+  .why-graphic {
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 420px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, var(--deep) 0%, var(--ocean) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9rem;
+    border: 1px solid rgba(0,212,255,0.15);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.4), 0 0 60px rgba(0,212,255,0.08);
+    animation: bob 4s ease-in-out infinite;
+  }
+  .why-graphic::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 32px;
+    background: linear-gradient(135deg, rgba(0,212,255,0.2), transparent 60%);
+    pointer-events: none;
+  }
+  .why-content h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    letter-spacing: 0.03em;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+  }
+  .why-content h2 span { color: var(--accent); }
+  .why-content p {
+    color: rgba(245,251,255,0.55);
+    font-weight: 300;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+  .perks { list-style: none; display: flex; flex-direction: column; gap: 0.9rem; }
+  .perks li {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.95rem;
+    color: rgba(245,251,255,0.75);
+  }
+  .perks li::before {
+    content: '✓';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: rgba(0,212,255,0.15);
+    color: var(--accent);
+    border-radius: 50%;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials {
+    background: var(--deep);
+    padding: 6rem 2rem;
+  }
+  .testi-grid {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .testi {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(56,182,255,0.1);
+    border-radius: 18px;
+    padding: 2rem;
+    position: relative;
+  }
+  .testi::before {
+    content: '"';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem;
+    color: var(--accent);
+    opacity: 0.2;
+    position: absolute;
+    top: 0.5rem;
+    left: 1.2rem;
+    line-height: 1;
+  }
+  .testi p {
+    color: rgba(245,251,255,0.65);
+    font-weight: 300;
+    font-size: 0.95rem;
+    line-height: 1.75;
+    margin-bottom: 1.2rem;
+    padding-top: 1.5rem;
+  }
+  .testi-author {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .testi-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ocean), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .testi-name { font-weight: 500; font-size: 0.9rem; }
+  .testi-loc { font-size: 0.75rem; color: rgba(245,251,255,0.4); }
+  .stars { color: var(--accent); font-size: 0.75rem; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+
+  /* ── CONTACT ── */
+  .contact {
+    padding: 7rem 2rem;
+    background: var(--navy);
+    text-align: center;
+  }
+  .contact-box {
+    max-width: 600px;
+    margin: 3rem auto 0;
+    background: rgba(14,95,163,0.1);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+  }
+  .contact-fields { display: flex; flex-direction: column; gap: 1rem; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  input, textarea, select {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(56,182,255,0.15);
+    border-radius: 10px;
+    padding: 0.85rem 1.1rem;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input::placeholder, textarea::placeholder { color: rgba(245,251,255,0.3); }
+  input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+  select option { background: var(--deep); }
+  textarea { resize: vertical; min-height: 100px; }
+  .submit-btn {
+    background: var(--accent);
+    color: var(--navy);
+    border: none;
+    padding: 1rem;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 0.5rem;
+    transition: opacity 0.2s, transform 0.2s;
+    box-shadow: 0 0 30px rgba(0,212,255,0.3);
+  }
+  .submit-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  .contact-info {
+    margin-top: 2.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+  }
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: rgba(245,251,255,0.55);
+  }
+  .info-item span:first-child { font-size: 1.1rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--deep);
+    border-top: 1px solid rgba(56,182,255,0.08);
+    padding: 2rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  footer p { color: rgba(245,251,255,0.3); font-size: 0.82rem; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    nav ul { display: none; }
+    .why-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .why-graphic { max-width: 280px; font-size: 6rem; }
+    .field-row { grid-template-columns: 1fr; }
+    footer { justify-content: center; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wave-bg"></div>
+
+<!-- Droplets -->
+<div class="drops" id="drops"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">
+    <span class="logo-icon">🐬</span>
+    <span class="logo-text">Dolphin<span>Splash</span></span>
+  </a>
+  <ul>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#contact" class="nav-cta">Get a Quote</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-spray"></div>
+  <p class="hero-eyebrow">Professional Pressure Washing</p>
+  <h1>Make It<em>Shine.</em></h1>
+  <p class="hero-sub">Dolphin Splash brings the power of the ocean to your driveway, deck, and home. Spotless results — every time.</p>
+  <div class="hero-buttons">
+    <a href="#contact" class="btn-primary">Get a Free Quote</a>
+    <a href="#services" class="btn-secondary">See Our Services</a>
+  </div>
+  <div class="hero-badge">
+    <div class="badge-item">
+      <div class="badge-num">500+</div>
+      <div class="badge-label">Jobs Completed</div>
+    </div>
+    <div class="badge-item">
+      <div class="badge-num">5★</div>
+      <div class="badge-label">Average Rating</div>
+    </div>
+    <div class="badge-item">
+      <div class="badge-num">100%</div>
+      <div class="badge-label">Satisfaction</div>
+    </div>
+  </div>
+</section>
+
+<!-- WAVE DIVIDER -->
+<div class="wave-divider">
+  <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z" fill="#0d2240"/>
+  </svg>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <p class="section-label">What We Do</p>
+  <h2 class="section-title">Our Services</h2>
+  <p class="section-sub">From driveways to rooftops, we blast away years of grime with professional-grade equipment.</p>
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">🏠</div>
+      <h3>House Washing</h3>
+      <p>Full exterior cleaning that removes mold, mildew, and dirt from siding, brick, and stucco. Safe for all surfaces.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚗</div>
+      <h3>Driveway &amp; Concrete</h3>
+      <p>Heavy-duty cleaning for driveways, walkways, and concrete pads. Removes oil stains, tire marks, and more.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌿</div>
+      <h3>Deck &amp; Patio</h3>
+      <p>Restore your outdoor living space. We clean wood, composite, and stone surfaces without causing damage.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏢</div>
+      <h3>Commercial</h3>
+      <p>Keep your business looking sharp. Storefronts, parking lots, and building exteriors cleaned to impress clients.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🛡️</div>
+      <h3>Roof Cleaning</h3>
+      <p>Soft-wash roof treatment eliminates algae, moss, and black streaks without high-pressure damage to shingles.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚧</div>
+      <h3>Fence Washing</h3>
+      <p>Revive faded and grimy fences. Wood, vinyl, or metal — we restore that fresh, clean look fast.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🗑️</div>
+      <h3>Garbage Can Cleaning</h3>
+      <p>Blast away bacteria, odors, and built-up grime from your trash and recycling bins. Pricing varies based on the size and number of cans — contact us for a custom quote.</p>
+      <p style="margin-top:0.7rem; font-size:0.8rem; color:rgba(0,212,255,0.7); font-weight:500;">★ Pricing varies by size &amp; quantity</p>
+    </div>
+  </div>
+</section>
+
+<!-- WAVE DIVIDER -->
+<div class="wave-divider" style="background:var(--deep)">
+  <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,30 C240,0 480,60 720,30 C960,0 1200,60 1440,30 L1440,60 L0,60 Z" fill="#0a1628"/>
+  </svg>
+</div>
+
+<!-- WHY US -->
+<section class="why" id="why">
+  <div class="why-inner">
+    <div class="why-visual">
+      <div class="why-graphic">🐬</div>
+    </div>
+    <div class="why-content">
+      <p class="section-label" style="text-align:left">Why Dolphin Splash</p>
+      <h2>Clean Like You've <span>Never Seen Before</span></h2>
+      <p>We're not just blasting water. We use the right pressure, technique, and eco-safe detergents for every surface — protecting your property while delivering jaw-dropping results.</p>
+      <ul class="perks">
+        <li>Fully insured &amp; licensed professionals</li>
+        <li>Eco-friendly, biodegradable cleaning solutions</li>
+        <li>Same-week scheduling available</li>
+        <li>Transparent, upfront pricing — no surprises</li>
+        <li>100% satisfaction guarantee</li>
+        <li>Free on-site estimates</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<div class="wave-divider" style="background:var(--navy)">
+  <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z" fill="#0d2240"/>
+  </svg>
+</div>
+<section class="testimonials" id="reviews">
+  <p class="section-label">What Customers Say</p>
+  <h2 class="section-title">5-Star Reviews</h2>
+  <p class="section-sub">Don't take our word for it.</p>
+  <div class="testi-grid">
+    <div class="testi">
+      <div class="stars">★★★★★</div>
+      <p>My driveway looks brand new — I forgot it was even gray under all that grime. Dolphin Splash was fast, professional, and incredibly thorough.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">🏡</div>
+        <div>
+          <div class="testi-name">Sarah M.</div>
+          <div class="testi-loc">Homeowner</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi">
+      <div class="stars">★★★★★</div>
+      <p>Used them for our restaurant's exterior. The whole place looked like it was freshly painted after they were done. Customers have been commenting on it all week!</p>
+      <div class="testi-author">
+        <div class="testi-avatar">🍽️</div>
+        <div>
+          <div class="testi-name">James T.</div>
+          <div class="testi-loc">Restaurant Owner</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi">
+      <div class="stars">★★★★★</div>
+      <p>Our deck had 10 years of buildup. They restored it in two hours. Fair price, showed up on time, and the results speak for themselves. Will use again every year.</p>
+      <div class="testi-author">
+        <div class="testi-avatar">🌳</div>
+        <div>
+          <div class="testi-name">Linda K.</div>
+          <div class="testi-loc">Homeowner</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<div class="wave-divider" style="background:var(--deep)">
+  <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,30 C240,0 480,60 720,30 C960,0 1200,60 1440,30 L1440,60 L0,60 Z" fill="#0a1628"/>
+  </svg>
+</div>
+<section class="contact" id="contact">
+  <p class="section-label">Get in Touch</p>
+  <h2 class="section-title">Get Your Free Quote</h2>
+  <p class="section-sub" style="margin-bottom:0">Fill out the form and we'll get back to you within 24 hours.</p>
+  <div class="contact-box">
+    <div class="contact-fields">
+      <div class="field-row">
+        <input type="text" placeholder="First Name">
+        <input type="text" placeholder="Last Name">
+      </div>
+      <input type="email" placeholder="Email Address">
+      <input type="tel" placeholder="Phone Number">
+      <select>
+        <option value="" disabled selected>Select a Service</option>
+        <option>House Washing</option>
+        <option>Driveway &amp; Concrete</option>
+        <option>Deck &amp; Patio</option>
+        <option>Commercial Cleaning</option>
+        <option>Roof Cleaning</option>
+        <option>Fence Washing</option>
+        <option>Garbage Can Cleaning</option>
+        <option>Multiple Services</option>
+      </select>
+      <textarea placeholder="Tell us about your project — address, size, any details..."></textarea>
+      <button class="submit-btn">🐬 Send My Request</button>
+    </div>
+  </div>
+  <div class="contact-info">
+    <div class="info-item"><span>📞</span><span>(727) 314-8793</span></div>
+    <div class="info-item"><span>📧</span><span>dolphinsplashllc@gmail.com</span></div>
+    <div class="info-item"><span>📍</span><span>North Pinellas &amp; All Surrounding Areas</span></div>
+    <div class="info-item"><span>🕐</span><span>Mon–Sat, 7am–6pm</span></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">
+    <span class="logo-icon" style="font-size:1.3rem">🐬</span>
+    <span class="logo-text" style="font-size:1.2rem">Dolphin<span>Splash</span></span>
+  </div>
+  <p>© 2026 Dolphin Splash Pressure Washing. All rights reserved.</p>
+  <p style="color:rgba(245,251,255,0.2)">Licensed · Insured · 5★ Rated</p>
+</footer>
+
+<script>
+// Generate water drop particles
+const container = document.getElementById('drops');
+for (let i = 0; i < 30; i++) {
+  const d = document.createElement('div');
+  d.className = 'drop';
+  d.style.cssText = `
+    left: ${Math.random() * 100}%;
+    top: ${Math.random() * 100}%;
+    --dur: ${1.5 + Math.random() * 2}s;
+    --delay: ${Math.random() * 4}s;
+  `;
+  container.appendChild(d);
+}
+</script>
+
+</body>
+</html>
